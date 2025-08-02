@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StarFlix - Movie Site</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background-color: #1f1f1f;
+      padding: 20px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-align: center;
+      letter-spacing: 5px;
+      margin-bottom: 10px;
+    }
+    .controls {
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+      display: flex;
+      justify-content: center;
+    }
+    .search-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      max-width: 700px;
+    }
+    input[type="text"], select, button {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+    }
+    input[type="text"] {
+      flex: 2;
+      min-width: 150px;
+    }
+    select {
+      flex: 1;
+      min-width: 130px;
+    }
+    button {
+      background-color: #e50914;
+      color: white;
+      cursor: pointer;
+      flex: 1;
+      min-width: 100px;
+      transition: background-color 0.3s ease;
+      border-radius: 5px;
+      border: none;
+    }
+    button:hover {
+      background-color: #b0060f;
+    }
+    .movies-container {
+      max-width: 1100px;
+      margin: 0 auto 40px auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      padding: 0 10px;
+    }
+    .movie-card {
+      background-color: #222;
+      border-radius: 10px;
+      width: 220px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+    .movie-poster {
+      width: 100%;
+      display: block;
+      border-bottom: 1px solid #444;
+    }
+    .movie-title {
+      padding: 10px 0;
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 10px;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .btn {
+      flex: 1;
+      background-color: #e50914;
+      color: white;
+      border: none;
+      padding: 10px 0;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    .btn:hover {
+      background-color: #b0060f;
+    }
+    p.no-movies {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>StarFlix</header>
+
+  <div class="controls">
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Search" />
+      <button id="searchButton" type="button">Search</button>
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+        <option value="Movie">Movie</option>
+        <option value="Drama">Drama</option>
+        <option value="Thriller">Thriller</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="movies-container" id="movies-container">
+    <!-- Movie Cards -->
+  </div>
+
+  <script>
+    const movies = [
+      {
+        title: "Inception",
+        category: "Sci-Fi",
+        poster: "https://upload.wikimedia.org/wikipedia/en/6/6e/Inception_%282010%29_theatrical_poster.jpg",
+        downloadLink: "https://example-download-site.com/inception",
+        watchNowLink: "https://example-watchnow-site.com/inception"
+      },
+      {
+        title: "Interstellar",
+        category: "Sci-Fi",
+        poster: "https://upload.wikimedia.org/wikipedia/en/b/bc/Interstellar_film_poster.jpg",
+        downloadLink: "https://example-download-site.com/interstellar",
+        watchNowLink: "https://example-watchnow-site.com/interstellar"
+      },
+      {
+        title: "The Dark Knight",
+        category: "Action",
+        poster: "https://upload.wikimedia.org/wikipedia/en/8/8a/Dark_Knight.jpg",
+        downloadLink: "https://example-download-site.com/darkknight",
+        watchNowLink: "https://example-watchnow-site.com/darkknight"
+      },
+      {
+        title: "Shutter Island",
+        category: "Thriller",
+        poster: "https://upload.wikimedia.org/wikipedia/en/7/76/Shutterislandposter.jpg",
+        downloadLink: "https://example-download-site.com/shutterisland",
+        watchNowLink: "https://example-watchnow-site.com/shutterisland"
+      }
+    ];
+
+    const container = document.getElementById("movies-container");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+    const searchButton = document.getElementById("searchButton");
+
+    function renderMovies(filteredMovies) {
+      container.innerHTML = "";
+      if (filteredMovies.length === 0) {
+        container.innerHTML = '<p class="no-movies">No movies found.</p>';
+        return;
+      }
+      filteredMovies.forEach(movie => {
+        const card = document.createElement("div");
+        card.classList.add("movie-card");
+
+        card.innerHTML = `
+          <img class="movie-poster" src="${movie.poster}" alt="${movie.title} Poster" />
+          <div class="movie-title">${movie.title}</div>
+          <div class="buttons">
+            <a href="${movie.downloadLink}" class="btn">Download</a>
+            <a href="${movie.watchNowLink}" class="btn">Watch Now</a>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function updateUrl(searchText, selectedCategory) {
+      const params = new URLSearchParams();
+      if (searchText) params.set('search', searchText);
+      if (selectedCategory && selectedCategory !== 'all') params.set('category', selectedCategory);
+      
+      const newUrl = window.location.pathname + '?' + params.toString();
+      history.pushState({ search: searchText, category: selectedCategory }, '', newUrl);
+    }
+
+    function filterMovies(searchText = null, selectedCategory = null) {
+      if (searchText === null) searchText = searchInput.value.toLowerCase().trim();
+      if (selectedCategory === null) selectedCategory = categoryFilter.value;
+
+      const filtered = movies.filter(movie => {
+        const titleMatch = movie.title.toLowerCase().includes(searchText);
+        const categoryMatch = selectedCategory === 'all' || movie.category === selectedCategory;
+        return titleMatch && categoryMatch;
+      });
+
+      renderMovies(filtered);
+      updateUrl(searchText, selectedCategory);
+    }
+
+    function loadFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const searchText = params.get('search') || '';
+      const selectedCategory = params.get('category') || 'all';
+
+      searchInput.value = searchText;
+      categoryFilter.value = selectedCategory;
+      filterMovies(searchText, selectedCategory);
+    }
+
+    window.addEventListener('popstate', (event) => {
+      if (event.state) {
+        const { search, category } = event.state;
+        searchInput.value = search || '';
+        categoryFilter.value = category || 'all';
+        filterMovies(search, category);
+      } else {
+        searchInput.value = '';
+        categoryFilter.value = 'all';
+        filterMovies('', 'all');
+      }
+    });
+
+    loadFromUrl();
+
+    searchButton.addEventListener('click', () => {
+      filterMovies();
+    });
+  </script>
+</body>
+</html>
